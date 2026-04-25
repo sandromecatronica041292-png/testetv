@@ -73,7 +73,6 @@
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800">
-    <!-- Navbar (mesma responsividade anterior) -->
     <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
@@ -88,7 +87,7 @@
                     <a href="#" class="nav-link hover:text-slate-600 transition">Configurações</a>
                     <div class="flex items-center gap-x-2 bg-stone-100 text-stone-700 px-4 h-9 rounded-3xl text-sm font-medium">
                         <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        Tudo online
+                        Sistema Ativo
                     </div>
                     <button onclick="logout()" class="bg-slate-700 text-white px-6 h-9 rounded-3xl text-sm font-medium hover:bg-slate-800 transition">Sair</button>
                 </div>
@@ -120,18 +119,17 @@
         <div class="text-center mb-12 sm:mb-16">
             <div class="inline-flex items-center gap-x-2 bg-white border border-stone-200 rounded-3xl px-5 py-2 text-sm mb-6 shadow-sm">
                 <span class="text-emerald-500">●</span>
-                Conectado via Flask • Backend ativo
+                Conectado • Modo GitHub Web
             </div>
             <h1 class="text-4xl sm:text-5xl font-semibold tracking-tighter leading-tight mb-4">
                 Gerencie sua casa<br>com um clique
             </h1>
             <p class="text-lg sm:text-xl text-stone-500 max-w-md mx-auto px-2">
-                Todos os comandos agora são enviados para o servidor Flask em tempo real.
+                Controle seus dispositivos remotamente com persistência de dados local.
             </p>
         </div>
 
         <div id="devices-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <!-- Cards idênticos ao anterior -->
             <div onclick="openDevice('tv')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
                 <div class="aspect-[16/11] bg-gradient-to-br from-slate-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
                     <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
@@ -145,7 +143,7 @@
                 <div class="px-6 py-6 sm:px-8 sm:py-7">
                     <div class="flex justify-between items-baseline">
                         <h2 class="text-2xl font-semibold">Televisão</h2>
-                        <span id="tv-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Online</span>
+                        <span id="tv-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1">● Online</span>
                     </div>
                     <p class="text-stone-500 mt-1 text-sm sm:text-base">Samsung QLED • Sala de estar</p>
                 </div>
@@ -167,13 +165,13 @@
                 <div class="px-6 py-6 sm:px-8 sm:py-7">
                     <div class="flex justify-between items-baseline">
                         <h2 class="text-2xl font-semibold">Ar Condicionado</h2>
-                        <span id="ac-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> 24°C</span>
+                        <span id="ac-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1">24°C</span>
                     </div>
                     <p class="text-stone-500 mt-1 text-sm sm:text-base">Split 18000 BTU • Quarto</p>
                 </div>
             </div>
 
-            <div onclick="openDevice('garage')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer sm:col-span-2 lg:col-span-1">
+            <div onclick="openDevice('garage')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
                 <div class="aspect-[16/11] bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
                     <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
                         <rect x="40" y="80" width="320" height="140" fill="#f1f5f9" stroke="#334155" stroke-width="22" rx="8"/>
@@ -195,8 +193,6 @@
         </div>
     </div>
 
-    <!-- Modais (iguais ao anterior, mas com JS atualizado) -->
-    <!-- Modal TV -->
     <div onclick="if(event.target.id === 'tv-modal') closeModal('tv')" id="tv-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
         <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
             <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
@@ -206,7 +202,6 @@
                 </div>
                 <button onclick="closeModal('tv')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
             </div>
-            
             <div id="tv-screen" class="mx-6 mt-6 bg-slate-900 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
                 <div id="tv-content" class="text-white text-center w-full">
                     <div class="text-6xl mb-2">📺</div>
@@ -215,7 +210,6 @@
                 </div>
                 <div id="tv-off" class="hidden absolute inset-0 bg-slate-950 flex items-center justify-center text-white/30 text-8xl">⏻</div>
             </div>
-
             <div class="p-6 grid grid-cols-4 gap-3 text-center">
                 <button onclick="tvPower()" class="remote-button col-span-4 bg-red-500 hover:bg-red-600 text-white h-14 rounded-3xl text-xl flex items-center justify-center gap-x-2 font-medium">⏻ Ligar / Desligar</button>
                 <button onclick="tvVolumeDown()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔉</button>
@@ -223,327 +217,188 @@
                 <button onclick="tvVolumeUp()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔊</button>
                 <button onclick="tvChannelDown()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">⬅️ Canal -</button>
                 <button onclick="tvChannelUp()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">Canal + ➡️</button>
-                <button onclick="tvInput()" class="remote-button col-span-4 border border-stone-300 text-stone-500 hover:bg-stone-100 h-12 rounded-3xl text-sm font-medium">Mudar entrada (HDMI / Netflix)</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Ar Condicionado -->
     <div onclick="if(event.target.id === 'ac-modal') closeModal('ac')" id="ac-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
         <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
             <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-semibold">Controle do Ar Condicionado</h2>
+                    <h2 class="text-2xl font-semibold">Ar Condicionado</h2>
                     <p class="text-stone-500 text-sm">Split 18000 BTU • Quarto</p>
                 </div>
                 <button onclick="closeModal('ac')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
             </div>
-            
             <div class="px-6 py-8">
                 <div class="flex justify-center items-baseline gap-x-6 mb-8">
                     <button onclick="acTempDown()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">–</button>
                     <div class="text-center">
                         <div id="ac-temp" class="text-7xl font-semibold text-slate-700">24°</div>
-                        <div id="ac-mode-name" class="text-stone-400 text-sm font-medium">Frio • Auto</div>
+                        <div id="ac-mode-name" class="text-stone-400 text-sm font-medium">Frio • Ativo</div>
                     </div>
                     <button onclick="acTempUp()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">+</button>
                 </div>
-
                 <div class="grid grid-cols-5 gap-2 mb-8">
-                    <button onclick="acSetMode(0)" id="mode-0" class="remote-button text-xs font-medium py-4 rounded-3xl bg-sky-100 text-sky-700">❄️ Frio</button>
-                    <button onclick="acSetMode(1)" id="mode-1" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">🔥 Quente</button>
-                    <button onclick="acSetMode(2)" id="mode-2" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">🌬️ Ventilar</button>
-                    <button onclick="acSetMode(3)" id="mode-3" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">💧 Secar</button>
-                    <button onclick="acSetMode(4)" id="mode-4" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">♻️ Auto</button>
+                    <button onclick="acSetMode(0)" id="mode-0" class="remote-button text-xs py-4 rounded-3xl bg-sky-100 text-sky-700">❄️</button>
+                    <button onclick="acSetMode(1)" id="mode-1" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">🔥</button>
+                    <button onclick="acSetMode(2)" id="mode-2" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">🌬️</button>
+                    <button onclick="acSetMode(3)" id="mode-3" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">💧</button>
+                    <button onclick="acSetMode(4)" id="mode-4" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">♻️</button>
                 </div>
-
-                <div class="grid grid-cols-3 gap-4">
-                    <button onclick="acPower()" id="ac-power-btn" class="remote-button h-14 rounded-3xl text-lg font-medium flex items-center justify-center bg-emerald-500 text-white">⏻ Ligar</button>
-                    <button onclick="acFanSpeed()" class="remote-button col-span-2 border border-stone-300 text-stone-500 rounded-3xl text-sm">Velocidade do ventilador: <span id="fan-speed-text" class="font-semibold">Médio</span></button>
-                </div>
+                <button onclick="acPower()" id="ac-power-btn" class="w-full h-14 rounded-3xl text-lg font-medium bg-emerald-500 text-white">⏻ Ligar/Desligar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Garagem -->
     <div onclick="if(event.target.id === 'garage-modal') closeModal('garage')" id="garage-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
         <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
             <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-semibold">Controle da Garagem</h2>
+                    <h2 class="text-2xl font-semibold">Garagem</h2>
                     <p class="text-stone-500 text-sm">Portão automático</p>
                 </div>
                 <button onclick="closeModal('garage')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
             </div>
-            
             <div class="p-6">
-                <div class="flex flex-col items-center mb-10">
-                    <div id="garage-door-visual" class="w-full max-w-72 h-48 bg-stone-100 border-8 border-slate-700 rounded-3xl flex items-center justify-center relative overflow-hidden mx-auto">
-                        <div id="garage-door" class="w-56 bg-amber-300 h-40 rounded-2xl transition-all duration-700 flex items-center justify-center text-6xl shadow-inner">🚗</div>
-                    </div>
-                    <div id="garage-status" class="mt-6 text-2xl font-semibold text-amber-600">Fechada</div>
+                <div id="garage-door-visual" class="w-full max-w-72 h-48 bg-stone-100 border-8 border-slate-700 rounded-3xl flex items-center justify-center relative overflow-hidden mx-auto">
+                    <div id="garage-door" class="w-56 bg-amber-300 h-40 rounded-2xl transition-all duration-700 flex items-center justify-center text-6xl">🚗</div>
                 </div>
-
-                <div class="grid grid-cols-2 gap-6">
-                    <button onclick="toggleGarage()" id="garage-open-btn" class="remote-button h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl flex items-center justify-center gap-x-3">⬆️ ABRIR</button>
-                    <button onclick="toggleGarage()" id="garage-close-btn" class="remote-button h-20 text-2xl font-semibold bg-red-500 text-white rounded-3xl flex items-center justify-center gap-x-3 hidden">⬇️ FECHAR</button>
-                </div>
-                
-                <button onclick="stopGarage()" class="mt-6 w-full h-12 border border-stone-300 text-stone-500 rounded-3xl text-sm font-medium hover:bg-stone-100">⏹️ Parar movimento</button>
+                <div id="garage-status" class="mt-6 text-center text-2xl font-semibold text-amber-600">Fechada</div>
+                <button onclick="toggleGarage()" id="garage-action-btn" class="mt-8 w-full h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl">ABRIR</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast para feedback -->
-    <div id="toast" onclick="this.classList.add('hidden')" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-3xl shadow-2xl flex items-center gap-x-3 toast">
-        <span id="toast-text" class="font-medium"></span>
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-3xl shadow-2xl z-[200]">
+        <span id="toast-text"></span>
     </div>
 
     <footer class="bg-white border-t border-stone-200 py-8 text-center text-sm text-stone-400">
-        <div class="max-w-7xl mx-auto px-4">
-            ✅ Conectado ao Flask<br>
-            <span class="text-xs">Salve este arquivo como <strong>templates/index.html</strong></span>
-        </div>
+        ✅ Sincronizado localmente • AG Home Control
     </footer>
 
     <script>
-        // ====================== CONEXÃO COM FLASK ======================
-        const API_BASE = '/api'; // Flask roda em localhost:5000 por padrão
+        // ====================== PERSISTÊNCIA (Substitui o Flask) ======================
+        const STORAGE_KEY = 'home_automation_state';
+        
+        const defaultState = {
+            tv: { on: true, volume: 28, channel: 7 },
+            ac: { on: true, temp: 24, mode: 0 },
+            garage: { open: false }
+        };
 
-        async function apiCall(endpoint, method = 'POST', body = null) {
-            try {
-                const res = await fetch(`${API_BASE}${endpoint}`, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: body ? JSON.stringify(body) : null
-                });
-                const data = await res.json();
-                if (!data.success) throw new Error(data.error || 'Erro no servidor');
-                showToast(data.message || 'Comando enviado!');
-                return data;
-            } catch (err) {
-                console.error(err);
-                showToast('Erro ao conectar com o servidor Flask', true);
-                return null;
-            }
+        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState;
+
+        function save() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            updateMainDisplay();
         }
 
-        function showToast(text, error = false) {
+        // ====================== CORE FUNCTIONS ======================
+        function showToast(text) {
             const toast = document.getElementById('toast');
-            const toastText = document.getElementById('toast-text');
-            toastText.textContent = text;
-            toast.classList.toggle('bg-red-600', error);
-            toast.classList.toggle('bg-emerald-600', !error);
+            document.getElementById('toast-text').textContent = text;
             toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
+            setTimeout(() => toast.classList.add('hidden'), 2500);
         }
 
-        // ====================== ESTADO LOCAL (sincronizado com backend) ======================
-        let currentTv = { on: true, volume: 28, channel: 7 };
-        let currentAc = { on: true, temp: 24, mode: 0, fan: 2 };
-        let currentGarage = { open: false };
-
-        // ====================== FUNÇÕES DE ABRIR MODAL ======================
-        async function openDevice(device) {
-            // Busca estado atual do backend
-            const res = await apiCall(`/${device}/status`, 'GET');
-            if (res) {
-                if (device === 'tv') currentTv = res.state;
-                if (device === 'ac') currentAc = res.state;
-                if (device === 'garage') currentGarage = res.state;
-            }
-
-            if (device === 'tv') {
-                document.getElementById('tv-modal').classList.remove('hidden');
-                updateTVScreen();
-            } else if (device === 'ac') {
-                document.getElementById('ac-modal').classList.remove('hidden');
-                updateACDisplay();
-            } else if (device === 'garage') {
-                document.getElementById('garage-modal').classList.remove('hidden');
-                updateGarageDisplay();
-            }
+        function updateMainDisplay() {
+            document.getElementById('tv-status-main').textContent = state.tv.on ? '● Online' : '○ Offline';
+            document.getElementById('ac-status-main').textContent = state.ac.on ? `${state.ac.temp}°C` : 'Desligado';
+            const garageStatus = document.getElementById('garage-status-main');
+            garageStatus.textContent = state.garage.open ? 'Aberta' : 'Fechada';
+            garageStatus.className = state.garage.open ? 'text-emerald-500 text-sm font-medium' : 'text-amber-500 text-sm font-medium';
         }
 
-        function closeModal(device) {
-            if (device === 'tv') document.getElementById('tv-modal').classList.add('hidden');
-            if (device === 'ac') document.getElementById('ac-modal').classList.add('hidden');
-            if (device === 'garage') document.getElementById('garage-modal').classList.add('hidden');
-        }
-
-        // ====================== CONTROLES TV ======================
-        async function tvPower() {
-            const res = await apiCall('/tv/power');
-            if (res) {
-                currentTv.on = res.state.on;
-                updateTVScreen();
-            }
-        }
+        // ====================== TV CONTROLS ======================
         function updateTVScreen() {
             const content = document.getElementById('tv-content');
             const off = document.getElementById('tv-off');
-            if (currentTv.on) {
-                content.classList.remove('hidden');
-                off.classList.add('hidden');
-                document.getElementById('tv-channel-text').textContent = `Canal ${currentTv.channel} • Globo`;
-                document.getElementById('tv-volume-text').textContent = `Volume: ${currentTv.volume}`;
+            if (state.tv.on) {
+                content.classList.remove('hidden'); off.classList.add('hidden');
+                document.getElementById('tv-channel-text').textContent = `Canal ${state.tv.channel} • Globo`;
+                document.getElementById('tv-volume-text').textContent = `Volume: ${state.tv.volume}`;
             } else {
-                content.classList.add('hidden');
-                off.classList.remove('hidden');
+                content.classList.add('hidden'); off.classList.remove('hidden');
             }
-        }
-        async function tvVolumeUp() {
-            if (!currentTv.on) return;
-            const res = await apiCall('/tv/volume', 'POST', { action: 'up' });
-            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
-        }
-        async function tvVolumeDown() {
-            if (!currentTv.on) return;
-            const res = await apiCall('/tv/volume', 'POST', { action: 'down' });
-            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
-        }
-        async function tvMute() {
-            if (!currentTv.on) return;
-            const res = await apiCall('/tv/mute');
-            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
-        }
-        async function tvChannelUp() {
-            if (!currentTv.on) return;
-            const res = await apiCall('/tv/channel', 'POST', { action: 'up' });
-            if (res) { currentTv.channel = res.state.channel; updateTVScreen(); }
-        }
-        async function tvChannelDown() {
-            if (!currentTv.on) return;
-            const res = await apiCall('/tv/channel', 'POST', { action: 'down' });
-            if (res) { currentTv.channel = res.state.channel; updateTVScreen(); }
-        }
-        async function tvInput() {
-            if (!currentTv.on) return;
-            await apiCall('/tv/input');
         }
 
-        // ====================== CONTROLES AR CONDICIONADO ======================
-        async function acPower() {
-            const res = await apiCall('/ac/power');
-            if (res) {
-                currentAc.on = res.state.on;
-                updateACDisplay();
-            }
-        }
-        async function acTempUp() {
-            if (!currentAc.on) return;
-            const res = await apiCall('/ac/temp', 'POST', { action: 'up' });
-            if (res) { currentAc.temp = res.state.temp; updateACDisplay(); }
-        }
-        async function acTempDown() {
-            if (!currentAc.on) return;
-            const res = await apiCall('/ac/temp', 'POST', { action: 'down' });
-            if (res) { currentAc.temp = res.state.temp; updateACDisplay(); }
-        }
+        function tvPower() { state.tv.on = !state.tv.on; updateTVScreen(); save(); showToast('Energia TV alterada'); }
+        function tvVolumeUp() { if(state.tv.on) { state.tv.volume++; updateTVScreen(); save(); } }
+        function tvVolumeDown() { if(state.tv.on && state.tv.volume > 0) { state.tv.volume--; updateTVScreen(); save(); } }
+        function tvMute() { if(state.tv.on) { state.tv.volume = 0; updateTVScreen(); save(); } }
+        function tvChannelUp() { if(state.tv.on) { state.tv.channel++; updateTVScreen(); save(); } }
+        function tvChannelDown() { if(state.tv.on && state.tv.channel > 1) { state.tv.channel--; updateTVScreen(); save(); } }
+
+        // ====================== AC CONTROLS ======================
         function updateACDisplay() {
-            document.getElementById('ac-temp').textContent = `${currentAc.temp}°`;
-            const modeNames = ['Frio', 'Quente', 'Ventilar', 'Secar', 'Auto'];
-            document.getElementById('ac-mode-name').innerHTML = `${modeNames[currentAc.mode]} • ${currentAc.on ? 'Ligado' : 'Desligado'}`;
-            document.getElementById('ac-power-btn').textContent = currentAc.on ? '⏻ Desligar' : '⏻ Ligar';
-            document.getElementById('ac-power-btn').classList.toggle('bg-emerald-500', currentAc.on);
-            document.getElementById('ac-power-btn').classList.toggle('bg-stone-300', !currentAc.on);
-            // highlight modo
-            for (let i = 0; i < 5; i++) {
+            document.getElementById('ac-temp').textContent = `${state.ac.temp}°`;
+            const modes = ['Frio', 'Quente', 'Ventilar', 'Secar', 'Auto'];
+            document.getElementById('ac-mode-name').textContent = `${modes[state.ac.mode]} • ${state.ac.on ? 'Ativo' : 'Inativo'}`;
+            const btn = document.getElementById('ac-power-btn');
+            btn.className = `w-full h-14 rounded-3xl text-lg font-medium transition ${state.ac.on ? 'bg-emerald-500 text-white' : 'bg-stone-300 text-stone-600'}`;
+            
+            for(let i=0; i<5; i++) {
                 const el = document.getElementById(`mode-${i}`);
-                if (i === currentAc.mode) {
-                    el.classList.add('bg-sky-100', 'text-sky-700');
-                    el.classList.remove('bg-stone-100', 'hover:bg-stone-200');
-                } else {
-                    el.classList.remove('bg-sky-100', 'text-sky-700');
-                    el.classList.add('bg-stone-100', 'hover:bg-stone-200');
-                }
+                el.className = `remote-button text-xs py-4 rounded-3xl transition ${state.ac.mode === i ? 'bg-sky-100 text-sky-700 font-bold' : 'bg-stone-100'}`;
             }
-        }
-        async function acSetMode(modeIndex) {
-            if (!currentAc.on) return;
-            const res = await apiCall('/ac/mode', 'POST', { mode: modeIndex });
-            if (res) { currentAc.mode = res.state.mode; updateACDisplay(); }
-        }
-        async function acFanSpeed() {
-            if (!currentAc.on) return;
-            const res = await apiCall('/ac/fan');
-            if (res) { currentAc.fan = res.state.fan; document.getElementById('fan-speed-text').textContent = ['Baixo','Médio','Alto'][currentAc.fan-1]; }
         }
 
-        // ====================== CONTROLES GARAGEM ======================
-        async function toggleGarage() {
-            const res = await apiCall('/garage/toggle');
-            if (res) {
-                currentGarage.open = res.state.open;
-                updateGarageDisplay();
-            }
-        }
+        function acPower() { state.ac.on = !state.ac.on; updateACDisplay(); save(); }
+        function acTempUp() { if(state.ac.on && state.ac.temp < 30) { state.ac.temp++; updateACDisplay(); save(); } }
+        function acTempDown() { if(state.ac.on && state.ac.temp > 16) { state.ac.temp--; updateACDisplay(); save(); } }
+        function acSetMode(m) { if(state.ac.on) { state.ac.mode = m; updateACDisplay(); save(); } }
+
+        // ====================== GARAGE CONTROLS ======================
         function updateGarageDisplay() {
-            const statusEl = document.getElementById('garage-status');
-            const doorEl = document.getElementById('garage-door');
-            const openBtn = document.getElementById('garage-open-btn');
-            const closeBtn = document.getElementById('garage-close-btn');
-            if (currentGarage.open) {
-                statusEl.textContent = 'Aberta';
-                statusEl.className = 'mt-6 text-2xl font-semibold text-emerald-600';
-                doorEl.style.height = '80px';
-                doorEl.style.transform = 'translateY(60px)';
-                openBtn.classList.add('hidden');
-                closeBtn.classList.remove('hidden');
-                document.getElementById('garage-status-main').innerHTML = `<span class="text-emerald-500">Aberta</span>`;
+            const door = document.getElementById('garage-door');
+            const statusText = document.getElementById('garage-status');
+            const btn = document.getElementById('garage-action-btn');
+            
+            if (state.garage.open) {
+                door.style.height = '60px'; door.style.transform = 'translateY(50px)';
+                statusText.textContent = 'Aberta'; statusText.className = 'mt-6 text-center text-2xl font-semibold text-emerald-600';
+                btn.textContent = 'FECHAR'; btn.className = 'mt-8 w-full h-20 text-2xl font-semibold bg-red-500 text-white rounded-3xl transition';
             } else {
-                statusEl.textContent = 'Fechada';
-                statusEl.className = 'mt-6 text-2xl font-semibold text-amber-600';
-                doorEl.style.height = '160px';
-                doorEl.style.transform = 'translateY(0)';
-                openBtn.classList.remove('hidden');
-                closeBtn.classList.add('hidden');
-                document.getElementById('garage-status-main').innerHTML = `Fechada`;
+                door.style.height = '160px'; door.style.transform = 'translateY(0)';
+                statusText.textContent = 'Fechada'; statusText.className = 'mt-6 text-center text-2xl font-semibold text-amber-600';
+                btn.textContent = 'ABRIR'; btn.className = 'mt-8 w-full h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl transition';
             }
         }
-        async function stopGarage() {
-            await apiCall('/garage/stop');
+
+        function toggleGarage() { state.garage.open = !state.garage.open; updateGarageDisplay(); save(); showToast(state.garage.open ? 'Abrindo portão...' : 'Fechando portão...'); }
+
+        // ====================== MODAL LOGIC ======================
+        function openDevice(device) {
+            document.getElementById(`${device}-modal`).classList.remove('hidden');
+            if(device === 'tv') updateTVScreen();
+            if(device === 'ac') updateACDisplay();
+            if(device === 'garage') updateGarageDisplay();
         }
 
-        // ====================== MOBILE MENU ======================
+        function closeModal(device) {
+            document.getElementById(`${device}-modal`).classList.add('hidden');
+        }
+
         window.toggleMobileMenu = function() {
             const menu = document.getElementById('mobile-menu');
             const hamburger = document.getElementById('hamburger-icon');
             const closeIcon = document.getElementById('close-icon');
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                hamburger.classList.add('hidden');
-                closeIcon.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-                hamburger.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-            }
+            const isHidden = menu.classList.toggle('hidden');
+            hamburger.classList.toggle('hidden', !isHidden);
+            closeIcon.classList.toggle('hidden', isHidden);
         };
 
-        function logout() {
-            showToast('Sessão encerrada (demo)');
-            // Aqui você pode redirecionar ou limpar sessão real
-        }
+        function logout() { showToast('Sessão encerrada (Demo)'); }
 
-        // ====================== INICIALIZAÇÃO ======================
+        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('%c✅ SmartControl Flask conectado! Backend rodando em /api', 'color:#64748b; font-size:13px; font-weight:600');
-            
-            // ESC fecha modais e menu
+            updateMainDisplay();
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    const modals = document.querySelectorAll('.fixed.inset-0');
-                    modals.forEach(m => {
-                        if (!m.classList.contains('hidden')) {
-                            const id = m.id;
-                            if (id.includes('tv')) closeModal('tv');
-                            if (id.includes('ac')) closeModal('ac');
-                            if (id.includes('garage')) closeModal('garage');
-                        }
-                    });
-                    const menu = document.getElementById('mobile-menu');
-                    if (!menu.classList.contains('hidden')) toggleMobileMenu();
+                    ['tv', 'ac', 'garage'].forEach(closeModal);
+                    if (!document.getElementById('mobile-menu').classList.contains('hidden')) toggleMobileMenu();
                 }
             });
         });

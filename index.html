@@ -1,461 +1,552 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
-<title>NewEnergy | Monitor Pro
-Intelligence</title>
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
-<style>
-  :root {
-   --brand-primary: #1a365d; --brand-accent: #007aff; --bg-body: #f1f5f9;
---card-bg: #ffffff;
-   --text-main: #1e293b; --text-muted: #64748b; --on: #10b981; --off:
-#e11d48;
-   --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px
-rgba(0,0,0,0.05);
-  }
-  
-  body {
-margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-body);
-display: flex; justify-content: center; align-items: center; min-height: 100vh;
-padding: 15px; }
-  
-  .card {
-background: var(--card-bg); border-radius: 20px; padding: 35px; width: 100%;
-max-width: 440px; box-shadow: var(--shadow); position: relative; overflow:
-hidden; text-align: center; }
- 
-  /*
-CABEÇALHO */
- .header-main { position: relative; margin-bottom: 25px; }
- .logo-principal { font-size: 18px; text-transform: uppercase;
-letter-spacing: 3px; font-weight: 800; color: var(--brand-primary); cursor:
-pointer; }
- .btn-logout { position: absolute; top: -15px; right: -15px; background:
-#fff1f2; border: 1px solid #ffe4e6; color: var(--off); padding: 6px 12px;
-border-radius: 8px; font-size: 10px; cursor: pointer; font-weight: 700; }
- 
-  /*
-STATUS E INFO */
- .status-badge { display: inline-flex; align-items: center; gap: 8px;
-padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700;
-background: #ecfdf5; color: var(--on); border: 1px solid rgba(0,0,0,0.05);
-margin-bottom: 15px; }
-  .dot {
-width: 8px; height: 8px; border-radius: 50%; background: var(--on); box-shadow:
-0 0 8px var(--on); }
- .info-client-box { text-align: left; padding: 12px; border-left: 3px
-solid var(--brand-accent); background: #f8fafc; border-radius: 0 10px 10px 0;
-font-size: 12px; margin-bottom: 25px; }
- 
-  /*
-GAUGES */
- .gauges-container { display: flex; gap: 15px; margin-bottom: 25px; }
- .gauge-box { flex: 1; background: #f8fafc; padding: 20px 10px;
-border-radius: 16px; display: flex; flex-direction: column; align-items:
-center; border: 1px solid #f1f5f9; }
- .gauge-box canvas { width: 140px !important; height: 85px !important; }
-  .g-title
-{ font-size: 10px; color: var(--text-muted); text-transform: uppercase;
-font-weight: 700; margin-bottom: 8px; }
- .g-value { font-size: 22px; font-weight: 800; color:
-var(--brand-primary); }
- 
-  /*
-BOTÕES */
- .btn-action { width: 100%; padding: 16px; border: none; border-radius:
-12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 12px;
-text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 6px
-rgba(0,0,0,0.02); }
- .btn-led.on { background: var(--brand-primary); color: #fff; }
- .btn-led.off { background: #e2e8f0; color: var(--text-muted); }
- .btn-history { background: #fff; color: var(--brand-accent); border:
-1.5px solid var(--brand-accent); }
- 
-  /*
-PAINÉIS OCULTOS */
- #adminPanel, #acPanel { display: none; position: absolute; top: 0; left:
-0; width: 100%; height: 100%; background: #fff; border-radius: 20px; padding:
-25px; box-sizing: border-box; z-index: 100; flex-direction: column; overflow-y:
-auto; }
-  
- .admin-tabs { display: flex; gap: 4px; margin-bottom: 20px; background:
-#f1f5f9; padding: 4px; border-radius: 10px; }
- .tab-btn { flex: 1; padding: 8px; border: none; border-radius: 7px;
-font-size: 9px; font-weight: 800; cursor: pointer; background: transparent;
-color: var(--text-muted); }
- .tab-btn.active { background: #fff; color: var(--brand-primary);
-box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
- .tab-content { display: none; }
- .tab-content.active { display: block; }
- 
- .admin-input { background: #f8fafc; border: 1.5px solid #e2e8f0;
-padding: 10px; border-radius: 8px; width: 100%; box-sizing: border-box;
-font-size: 13px; margin-bottom: 12px; outline: none; }
-  label {
-font-size: 10px; color: var(--text-muted); text-transform: uppercase;
-font-weight: 700; margin-bottom: 4px; display: block; }
- 
- .ac-display { background: #0f172a; color: #fff; padding: 20px;
-border-radius: 15px; margin: 15px 0; display: flex; justify-content:
-space-around; border: 1px solid #1e293b; }
- .ac-unit span { display: block; font-size: 9px; color: #64748b;
-margin-bottom: 5px; }
- .ac-unit div { font-size: 28px; font-weight: 800; font-family:
-monospace; }
- .ir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
- .btn-learn { background: #fff; border: 1px dashed var(--brand-accent);
-color: var(--brand-accent); padding: 10px; border-radius: 8px; font-size: 9px;
-font-weight: 800; cursor: pointer; }
-</style>
- 
-<script
-src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script
-src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script
-src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script
-src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG • Gerencie sua casa remotamente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        :root {
+            --tw-color-primary: #64748b;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+        }
+        
+        .modal {
+            animation: modalPop 0.3s ease-out;
+        }
+        
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .remote-button {
+            transition: all 0.2s ease;
+        }
+        
+        .remote-button:active {
+            transform: scale(0.95);
+        }
+
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-menu {
+            animation: slideDown 0.3s ease forwards;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .device-svg {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+        }
+        
+        @media (min-width: 640px) {
+            .device-svg {
+                max-width: 280px;
+            }
+        }
+
+        .toast {
+            animation: toastIn 0.3s ease forwards;
+        }
+    </style>
 </head>
- 
-<body>
-<div class="card">
-  
-  <div
-id="adminPanel">
-   <div class="logo-principal" style="font-size: 12px;
-margin-bottom: 15px;">Engenharia de Serviço</div>
-   <div class="admin-tabs">
-       <button class="tab-btn active" onclick="switchTab('tabSist',
-this)">SISTEMA</button>
-       <button class="tab-btn" onclick="switchTab('tabManut',
-this)">MANUTENÇÃO</button>
-       <button class="tab-btn" onclick="switchTab('tabIR',
-this)">CAPTURAR IR</button>
-   </div>
- 
-   <div id="tabSist" class="tab-content active">
-       <label>Nome do Cliente</label>
-       <input type="text" id="cfgCliente"
-class="admin-input">
-       <label>Localização</label>
-       <input type="text" id="cfgLocal"
-class="admin-input">
-       <div style="display: grid; grid-template-columns: 1fr 1fr; gap:
-10px;">
-           <div><label>Temp Máx</label><input
-type="number" id="tMax"
-class="admin-input"></div>
-           <div><label>Hum Máx</label><input
-type="number" id="hMax"
-class="admin-input"></div>
-       </div>
-       <label>E-mail de Alerta</label>
-       <input type="email" id="cfgEmail"
-class="admin-input">
-   </div>
- 
-   <div id="tabManut" class="tab-content">
-       <div style="background:#f8fafc; padding:15px;
-border-radius:12px; margin-bottom:15px;">
-           <span style="font-size:11px; font-weight:800;">Alertas
-Enviados: <span id="countEmail"
-style="color:var(--brand-accent)">0</span></span>
-           <button
-onclick="zerarContador()" style="float:right;
-background:var(--off); color:white; border:none; padding:5px 10px;
-border-radius:6px; font-size:9px; cursor:pointer;">ZERAR</button>
-       </div>
-       <label>Intervalo E-mail (min)</label>
-        <input type="number"
-id="cfgTempoEmail" class="admin-input"
-placeholder="Ex: 10">
-   </div>
- 
-   <div id="tabIR" class="tab-content">
-       <label>Laboratório de Frequências</label>
-       <div class="ir-grid">
-           <button class="btn-learn" onclick="startLearn('on')">GRAVAR
-ON</button>
-           <button class="btn-learn"
-onclick="startLearn('off')">GRAVAR OFF</button>
-           <button class="btn-learn"
-onclick="startLearn('cool')">GRAVAR COOL</button>
-           <button class="btn-learn" onclick="startLearn('auto')">GRAVAR
-AUTO</button>
-           <button class="btn-learn" style="border-style:
-solid;" onclick="startLearn('temp_up')">GRAVAR +
-TEMP</button>
-           <button class="btn-learn" style="border-style:
-solid;" onclick="startLearn('temp_down')">GRAVAR -
-TEMP</button>
-       </div>
-   </div>
- 
-   <div style="margin-top: auto; display: flex; gap: 10px;
-padding-top: 20px;">
-       <button class="btn-action"
-style="background:var(--brand-primary); color:#fff; flex: 2;"
-onclick="salvarConfig()">SALVAR TUDO</button>
-       <button class="btn-action" style="background:none;
-border:1px solid #e2e8f0; flex: 1; font-size:11px;"
-onclick="fecharAdmin()">SAIR</button>
-   </div>
- </div>
- 
-  <div
-id="acPanel">
-   <div class="logo-principal" style="font-size: 14px;
-margin-bottom: 5px;">Controle Digital</div>
-   <div id="badgeAC" style="font-size:10px;
-font-weight:800; padding:4px 12px; border-radius:20px; background:#f1f5f9;
-display:inline-block; margin-bottom:10px;">MODO MANUAL</div>
- 
-   <div class="ac-display">
-       <div
-class="ac-unit"><span>Real</span><div
-id="acReal">--°</div></div>
-       <div style="width:1px; background:#334155;
-height:40px;"></div>
-       <div class="ac-unit" style="color:var(--on);"><span>Alvo</span><div
-id="acAlvo">22°</div></div>
-   </div>
- 
-   <div class="ir-grid">
-       <button class="btn-action"
-style="background:var(--brand-primary); color:#fff;"
-onclick="sendIR('on')">Ligar</button>
-       <button class="btn-action" style="background:var(--off);
-color:#fff;" onclick="sendIR('off')">Desligar</button>
-       <button class="btn-action btn-history"
-onclick="ajustarSetpoint(1)">+ Temp</button>
-       <button class="btn-action btn-history"
-onclick="ajustarSetpoint(-1)">- Temp</button>
-       <button id="btnAuto" class="btn-action"
-style="grid-column: span 2; background:var(--brand-accent);
-color:#fff;" onclick="toggleAuto()">ATIVAR
-AUTOMÁTICO</button>
-   </div>
-   <button class="btn-action" style="background:none;
-color:var(--text-muted); font-size:11px;"
-onclick="fecharAC()">VOLTAR</button>
- </div>
- 
-  <div
-class="header-main">
-   <div class="logo-principal"
-id="logoAdmin">NewEnergy</div>
-   <button class="btn-logout"
-onclick="fazerLogout()">Sair</button>
- </div>
-  
-  <div
-id="status" class="status-badge"><div
-class="dot"></div>
-<span>CONECTADO</span></div>
- 
-  <div
-class="info-client-box">
-   <div>CLIENTE: <strong
-id="dispCliente">--</strong></div>
-   <div>LOCAL: <strong
-id="dispLocal">--</strong></div>
- </div>
- 
-  <div
-class="gauges-container">
-   <div class="gauge-box"><div
-class="g-title">Temperatura</div><canvas
-id="gTemp"></canvas><div id="tempVal"
-class="g-value">--°C</div></div>
-   <div class="gauge-box"><div
-class="g-title">Umidade</div><canvas
-id="gHum"></canvas><div id="humVal"
-class="g-value">--%</div></div>
- </div>
- 
- <button id="btnLED" class="btn-action btn-led
-off">Ligar Iluminação</button>
- <button class="btn-action" style="background:var(--brand-accent);
-color:#fff;" onclick="abrirAC()">Controle
-Climatização</button>
- <button class="btn-action btn-history"
-onclick="window.location.href='historico.html'">Relatórios de
-Performance</button>
-</div>
- 
-<script>
-firebase.initializeApp({
-  apiKey:
-"AIzaSyCLnGnSEpqacBtseenPaS8CxHtZW0iD96I",
- authDomain: "controle-led-esp-oficial.firebaseapp.com",
- databaseURL:
-"https://controle-led-esp-oficial-default-rtdb.firebaseio.com",
- projectId: "controle-led-esp-oficial"
-});
- 
-const db = firebase.database();
-const auth = firebase.auth();
-let config = { tMax: 30, hMax: 80, setpoint:
-22, acAuto: false };
-let gT, gH;
- 
-function switchTab(id, btn) {
-   document.querySelectorAll('.tab-content').forEach(c =>
-c.classList.remove('active'));
-   document.querySelectorAll('.tab-btn').forEach(b =>
-b.classList.remove('active'));
-   document.getElementById(id).classList.add('active');
-   btn.classList.add('active');
-}
-function abrirAC() {
-document.getElementById("acPanel").style.display = "flex";
-}
-function fecharAC() {
-document.getElementById("acPanel").style.display = "none";
-}
-function fecharAdmin() {
-document.getElementById("adminPanel").style.display =
-"none"; }
- 
-function initGauges() {
-  const
-opt = (col) => ({ angle: 0.15, lineWidth: 0.2, radiusScale: 0.9, pointer: {
-length: 0.5, strokeWidth: 0.03, color: '#1a365d' }, colorStart: col, colorStop:
-col, strokeColor: '#e2e8f0', generateGradient: true, highDpiSupport: true });
-  gT =
-new
-Gauge(document.getElementById("gTemp")).setOptions(opt('#e11d48'));
- gT.maxValue = 50; gT.setMinValue(0); gT.set(0);
-  gH =
-new
-Gauge(document.getElementById("gHum")).setOptions(opt('#007aff'));
- gH.maxValue = 100; gH.setMinValue(0); gH.set(0);
-}
- 
-auth.onAuthStateChanged(user => {
-  if
-(user) {
-   initGauges();
-   db.ref("/config_alertas").on("value", s => {
-       const val = s.val();
-       if(val) {
-           config = {...config, ...val};
-           document.getElementById("dispCliente").innerText =
-config.cliente || "--";
-           document.getElementById("dispLocal").innerText = config.local
-|| "--";
-           document.getElementById("countEmail").innerText =
-config.contadorAlertas || 0;
-           document.getElementById("acAlvo").innerText = (config.setpoint
-|| 22) + "°";
-           document.getElementById("btnAuto").innerText = config.acAuto ?
-"DESATIVAR AUTO" : "ATIVAR AUTOMÁTICO";
-           document.getElementById("badgeAC").innerText = config.acAuto ?
-"MODO AUTOMÁTICO" : "MODO MANUAL";
-           document.getElementById("badgeAC").style.background =
-config.acAuto ? "#dcfce7" : "#f1f5f9";
-           
-           document.getElementById("cfgCliente").value = config.cliente
-|| "";
-           document.getElementById("cfgLocal").value = config.local ||
-"";
-           document.getElementById("tMax").value = config.tMax ||
-"";
-           document.getElementById("hMax").value = config.hMax ||
-"";
-           document.getElementById("cfgEmail").value =
-config.emailDestino || "";
-           if(document.getElementById("cfgTempoEmail")) {
-               document.getElementById("cfgTempoEmail").value = (config.tempoEmail
-/ 60000) || 10;
-           }
-        }
-    });
- 
-   db.ref("/temp").on("value", s => {
-       const v = parseFloat(s.val()) || 0; gT.set(v);
-       document.getElementById("tempVal").innerText = v.toFixed(1) +
-"°C";
-       document.getElementById("acReal").innerText = v.toFixed(0) +
-"°";
-       if(config.acAuto && v > config.setpoint) sendIR('cool');
-    });
- 
-   db.ref("/hum").on("value", s => { 
-       const v = parseFloat(s.val()) || 0; gH.set(v); 
-       document.getElementById("humVal").innerText = v.toFixed(0) +
-"%"; 
-    });
- 
-   db.ref("/led").on("value", s => {
-       const b = document.getElementById("btnLED");
-       const ligado = s.val() == 1;
-       b.innerText = ligado ? "Luz Ligada" : "Ligar
-Iluminação";
-       b.className = "btn-action btn-led " + (ligado ? "on"
-: "off");
-    });
-  } else
-{ window.location.replace("index.html"); }
-});
- 
-function salvarConfig() {
-    const
-novosDados = {
-       cliente: document.getElementById("cfgCliente").value,
-       local: document.getElementById("cfgLocal").value,
-       tMax: parseFloat(document.getElementById("tMax").value) || 30,
-       hMax: parseFloat(document.getElementById("hMax").value) || 80,
-       emailDestino: document.getElementById("cfgEmail").value,
-       tempoEmail:
-(parseFloat(document.getElementById("cfgTempoEmail").value) || 10) *
-60000
-    };
-   db.ref("/config_alertas").update(novosDados).then(() => {
-alert("Sucesso!"); fecharAdmin(); });
-}
- 
-// LÓGICA DE INFRAVERMELHO INTEGRADA
-function sendIR(cmd) {
-db.ref("/ir_system/execute").set({ command: cmd, ts: Date.now() }); }
- 
-function startLearn(f) { 
-   db.ref("/ir_system/learn").set({ active: true, function: f,
-ts: Date.now() }); 
-   alert("ESP32 aguardando sinal para: " + f); 
-}
- 
-function ajustarSetpoint(v) { 
-    const
-novo = (config.setpoint || 22) + v;
-   db.ref("/config_alertas/setpoint").set(novo); 
-    //
-Dispara o sinal IR correspondente que você gravou
-   sendIR(v > 0 ? 'temp_up' : 'temp_down');
-}
- 
-function toggleAuto() {
-db.ref("/config_alertas/acAuto").set(!config.acAuto); }
-function zerarContador() {
-db.ref("/config_alertas/contadorAlertas").set(0); }
-function fazerLogout() { auth.signOut().then(()
-=> window.location.replace("index.html")); }
- 
-let cliques = 0;
-document.getElementById("logoAdmin").onclick
-= () => { if(++cliques >= 5) {
-document.getElementById("adminPanel").style.display =
-"flex"; cliques = 0; } };
-document.getElementById("btnLED").onclick
-= () => {
-db.ref("/led").set(document.getElementById("btnLED").classList.contains('off')
-? 1 : 0); };
-</script>
+<body class="bg-stone-100 text-stone-800">
+    <!-- Navbar (mesma responsividade anterior) -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-slate-700 rounded-2xl flex items-center justify-center text-white text-2xl font-semibold">AG</div>
+                    <h1 class="text-2xl font-semibold tracking-tight">AS e JG</h1>
+                </div>
+
+                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a href="#" onclick="document.getElementById('devices-section').scrollIntoView({ behavior: 'smooth' })" class="nav-link hover:text-slate-600 transition">Dispositivos</a>
+                    <a href="#" class="nav-link hover:text-slate-600 transition">Histórico</a>
+                    <a href="#" class="nav-link hover:text-slate-600 transition">Configurações</a>
+                    <div class="flex items-center gap-x-2 bg-stone-100 text-stone-700 px-4 h-9 rounded-3xl text-sm font-medium">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        Tudo online
+                    </div>
+                    <button onclick="logout()" class="bg-slate-700 text-white px-6 h-9 rounded-3xl text-sm font-medium hover:bg-slate-800 transition">Sair</button>
+                </div>
+
+                <div class="flex md:hidden items-center gap-x-4">
+                    <div class="flex items-center gap-x-2 bg-stone-100 text-stone-700 px-3 h-8 rounded-3xl text-xs font-medium">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        Online
+                    </div>
+                    <button onclick="toggleMobileMenu()" id="hamburger-btn" class="w-10 h-10 flex items-center justify-center text-slate-700">
+                        <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mobile-menu" class="hidden mobile-menu md:hidden mt-4 pt-4 border-t border-stone-200">
+                <div class="flex flex-col gap-y-4 text-sm font-medium">
+                    <a href="#" onclick="document.getElementById('devices-section').scrollIntoView({ behavior: 'smooth' }); toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Dispositivos</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Histórico</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Configurações</a>
+                    <button onclick="logout(); toggleMobileMenu()" class="mt-2 bg-slate-700 text-white py-3 rounded-3xl text-sm font-medium">Sair</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-12">
+        <div class="text-center mb-12 sm:mb-16">
+            <div class="inline-flex items-center gap-x-2 bg-white border border-stone-200 rounded-3xl px-5 py-2 text-sm mb-6 shadow-sm">
+                <span class="text-emerald-500">●</span>
+                Conectado via Flask • Backend ativo
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tighter leading-tight mb-4">
+                Gerencie sua casa<br>com um clique
+            </h1>
+            <p class="text-lg sm:text-xl text-stone-500 max-w-md mx-auto px-2">
+                Todos os comandos agora são enviados para o servidor Flask em tempo real.
+            </p>
+        </div>
+
+        <div id="devices-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Cards idênticos ao anterior -->
+            <div onclick="openDevice('tv')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
+                <div class="aspect-[16/11] bg-gradient-to-br from-slate-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
+                        <rect x="30" y="25" width="340" height="190" rx="15" ry="15" fill="#f1f5f9" stroke="#334155" stroke-width="25"/>
+                        <rect x="30" y="215" width="340" height="18" fill="#334155"/>
+                        <rect x="165" y="233" width="70" height="12" rx="2" fill="#334155"/>
+                        <rect x="55" y="45" width="290" height="150" rx="8" ry="8" fill="#0f172a"/>
+                        <text x="200" y="120" text-anchor="middle" fill="#e2e8f0" font-size="28" font-weight="600">TV</text>
+                    </svg>
+                </div>
+                <div class="px-6 py-6 sm:px-8 sm:py-7">
+                    <div class="flex justify-between items-baseline">
+                        <h2 class="text-2xl font-semibold">Televisão</h2>
+                        <span id="tv-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Online</span>
+                    </div>
+                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Samsung QLED • Sala de estar</p>
+                </div>
+            </div>
+
+            <div onclick="openDevice('ac')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
+                <div class="aspect-[16/11] bg-gradient-to-br from-sky-100 to-slate-100 flex items-center justify-center p-6 sm:p-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
+                        <rect x="45" y="65" width="310" height="130" rx="12" ry="12" fill="#e0f2fe" stroke="#334155" stroke-width="22"/>
+                        <g opacity="0.8">
+                            <rect x="75" y="85" width="250" height="18" fill="#64748b" rx="2"/>
+                            <rect x="75" y="115" width="250" height="18" fill="#64748b" rx="2"/>
+                            <rect x="75" y="145" width="250" height="18" fill="#64748b" rx="2"/>
+                        </g>
+                        <text x="200" y="125" text-anchor="middle" fill="#334155" font-size="38" font-weight="700">AC</text>
+                        <rect x="130" y="195" width="140" height="25" rx="4" fill="#334155"/>
+                    </svg>
+                </div>
+                <div class="px-6 py-6 sm:px-8 sm:py-7">
+                    <div class="flex justify-between items-baseline">
+                        <h2 class="text-2xl font-semibold">Ar Condicionado</h2>
+                        <span id="ac-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> 24°C</span>
+                    </div>
+                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Split 18000 BTU • Quarto</p>
+                </div>
+            </div>
+
+            <div onclick="openDevice('garage')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer sm:col-span-2 lg:col-span-1">
+                <div class="aspect-[16/11] bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
+                        <rect x="40" y="80" width="320" height="140" fill="#f1f5f9" stroke="#334155" stroke-width="22" rx="8"/>
+                        <rect x="85" y="95" width="120" height="110" fill="#e2e8f0" stroke="#334155" stroke-width="12"/>
+                        <line x1="85" y1="125" x2="205" y2="125" stroke="#64748b" stroke-width="8"/>
+                        <line x1="85" y1="155" x2="205" y2="155" stroke="#64748b" stroke-width="8"/>
+                        <polygon points="40,80 200,25 360,80" fill="#334155"/>
+                        <circle cx="270" cy="110" r="18" fill="#eab308"/>
+                    </svg>
+                </div>
+                <div class="px-6 py-6 sm:px-8 sm:py-7">
+                    <div class="flex justify-between items-baseline">
+                        <h2 class="text-2xl font-semibold">Garagem</h2>
+                        <span id="garage-status-main" class="text-amber-500 text-sm font-medium">Fechada</span>
+                    </div>
+                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Portão automático • Casa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais (iguais ao anterior, mas com JS atualizado) -->
+    <!-- Modal TV -->
+    <div onclick="if(event.target.id === 'tv-modal') closeModal('tv')" id="tv-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold">Controle da Televisão</h2>
+                    <p class="text-stone-500 text-sm">Samsung QLED • Sala</p>
+                </div>
+                <button onclick="closeModal('tv')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
+            </div>
+            
+            <div id="tv-screen" class="mx-6 mt-6 bg-slate-900 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
+                <div id="tv-content" class="text-white text-center w-full">
+                    <div class="text-6xl mb-2">📺</div>
+                    <p id="tv-channel-text" class="text-3xl font-medium">Canal 7 • Globo</p>
+                    <p id="tv-volume-text" class="text-sm mt-1 opacity-70">Volume: 28</p>
+                </div>
+                <div id="tv-off" class="hidden absolute inset-0 bg-slate-950 flex items-center justify-center text-white/30 text-8xl">⏻</div>
+            </div>
+
+            <div class="p-6 grid grid-cols-4 gap-3 text-center">
+                <button onclick="tvPower()" class="remote-button col-span-4 bg-red-500 hover:bg-red-600 text-white h-14 rounded-3xl text-xl flex items-center justify-center gap-x-2 font-medium">⏻ Ligar / Desligar</button>
+                <button onclick="tvVolumeDown()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔉</button>
+                <button onclick="tvMute()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔇</button>
+                <button onclick="tvVolumeUp()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔊</button>
+                <button onclick="tvChannelDown()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">⬅️ Canal -</button>
+                <button onclick="tvChannelUp()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">Canal + ➡️</button>
+                <button onclick="tvInput()" class="remote-button col-span-4 border border-stone-300 text-stone-500 hover:bg-stone-100 h-12 rounded-3xl text-sm font-medium">Mudar entrada (HDMI / Netflix)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ar Condicionado -->
+    <div onclick="if(event.target.id === 'ac-modal') closeModal('ac')" id="ac-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold">Controle do Ar Condicionado</h2>
+                    <p class="text-stone-500 text-sm">Split 18000 BTU • Quarto</p>
+                </div>
+                <button onclick="closeModal('ac')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
+            </div>
+            
+            <div class="px-6 py-8">
+                <div class="flex justify-center items-baseline gap-x-6 mb-8">
+                    <button onclick="acTempDown()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">–</button>
+                    <div class="text-center">
+                        <div id="ac-temp" class="text-7xl font-semibold text-slate-700">24°</div>
+                        <div id="ac-mode-name" class="text-stone-400 text-sm font-medium">Frio • Auto</div>
+                    </div>
+                    <button onclick="acTempUp()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">+</button>
+                </div>
+
+                <div class="grid grid-cols-5 gap-2 mb-8">
+                    <button onclick="acSetMode(0)" id="mode-0" class="remote-button text-xs font-medium py-4 rounded-3xl bg-sky-100 text-sky-700">❄️ Frio</button>
+                    <button onclick="acSetMode(1)" id="mode-1" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">🔥 Quente</button>
+                    <button onclick="acSetMode(2)" id="mode-2" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">🌬️ Ventilar</button>
+                    <button onclick="acSetMode(3)" id="mode-3" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">💧 Secar</button>
+                    <button onclick="acSetMode(4)" id="mode-4" class="remote-button text-xs font-medium py-4 rounded-3xl bg-stone-100 hover:bg-stone-200">♻️ Auto</button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <button onclick="acPower()" id="ac-power-btn" class="remote-button h-14 rounded-3xl text-lg font-medium flex items-center justify-center bg-emerald-500 text-white">⏻ Ligar</button>
+                    <button onclick="acFanSpeed()" class="remote-button col-span-2 border border-stone-300 text-stone-500 rounded-3xl text-sm">Velocidade do ventilador: <span id="fan-speed-text" class="font-semibold">Médio</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Garagem -->
+    <div onclick="if(event.target.id === 'garage-modal') closeModal('garage')" id="garage-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold">Controle da Garagem</h2>
+                    <p class="text-stone-500 text-sm">Portão automático</p>
+                </div>
+                <button onclick="closeModal('garage')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
+            </div>
+            
+            <div class="p-6">
+                <div class="flex flex-col items-center mb-10">
+                    <div id="garage-door-visual" class="w-full max-w-72 h-48 bg-stone-100 border-8 border-slate-700 rounded-3xl flex items-center justify-center relative overflow-hidden mx-auto">
+                        <div id="garage-door" class="w-56 bg-amber-300 h-40 rounded-2xl transition-all duration-700 flex items-center justify-center text-6xl shadow-inner">🚗</div>
+                    </div>
+                    <div id="garage-status" class="mt-6 text-2xl font-semibold text-amber-600">Fechada</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <button onclick="toggleGarage()" id="garage-open-btn" class="remote-button h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl flex items-center justify-center gap-x-3">⬆️ ABRIR</button>
+                    <button onclick="toggleGarage()" id="garage-close-btn" class="remote-button h-20 text-2xl font-semibold bg-red-500 text-white rounded-3xl flex items-center justify-center gap-x-3 hidden">⬇️ FECHAR</button>
+                </div>
+                
+                <button onclick="stopGarage()" class="mt-6 w-full h-12 border border-stone-300 text-stone-500 rounded-3xl text-sm font-medium hover:bg-stone-100">⏹️ Parar movimento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast para feedback -->
+    <div id="toast" onclick="this.classList.add('hidden')" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-3xl shadow-2xl flex items-center gap-x-3 toast">
+        <span id="toast-text" class="font-medium"></span>
+    </div>
+
+    <footer class="bg-white border-t border-stone-200 py-8 text-center text-sm text-stone-400">
+        <div class="max-w-7xl mx-auto px-4">
+            ✅ Conectado ao Flask<br>
+            <span class="text-xs">Salve este arquivo como <strong>templates/index.html</strong></span>
+        </div>
+    </footer>
+
+    <script>
+        // ====================== CONEXÃO COM FLASK ======================
+        const API_BASE = '/api'; // Flask roda em localhost:5000 por padrão
+
+        async function apiCall(endpoint, method = 'POST', body = null) {
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body ? JSON.stringify(body) : null
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error || 'Erro no servidor');
+                showToast(data.message || 'Comando enviado!');
+                return data;
+            } catch (err) {
+                console.error(err);
+                showToast('Erro ao conectar com o servidor Flask', true);
+                return null;
+            }
+        }
+
+        function showToast(text, error = false) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = text;
+            toast.classList.toggle('bg-red-600', error);
+            toast.classList.toggle('bg-emerald-600', !error);
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // ====================== ESTADO LOCAL (sincronizado com backend) ======================
+        let currentTv = { on: true, volume: 28, channel: 7 };
+        let currentAc = { on: true, temp: 24, mode: 0, fan: 2 };
+        let currentGarage = { open: false };
+
+        // ====================== FUNÇÕES DE ABRIR MODAL ======================
+        async function openDevice(device) {
+            // Busca estado atual do backend
+            const res = await apiCall(`/${device}/status`, 'GET');
+            if (res) {
+                if (device === 'tv') currentTv = res.state;
+                if (device === 'ac') currentAc = res.state;
+                if (device === 'garage') currentGarage = res.state;
+            }
+
+            if (device === 'tv') {
+                document.getElementById('tv-modal').classList.remove('hidden');
+                updateTVScreen();
+            } else if (device === 'ac') {
+                document.getElementById('ac-modal').classList.remove('hidden');
+                updateACDisplay();
+            } else if (device === 'garage') {
+                document.getElementById('garage-modal').classList.remove('hidden');
+                updateGarageDisplay();
+            }
+        }
+
+        function closeModal(device) {
+            if (device === 'tv') document.getElementById('tv-modal').classList.add('hidden');
+            if (device === 'ac') document.getElementById('ac-modal').classList.add('hidden');
+            if (device === 'garage') document.getElementById('garage-modal').classList.add('hidden');
+        }
+
+        // ====================== CONTROLES TV ======================
+        async function tvPower() {
+            const res = await apiCall('/tv/power');
+            if (res) {
+                currentTv.on = res.state.on;
+                updateTVScreen();
+            }
+        }
+        function updateTVScreen() {
+            const content = document.getElementById('tv-content');
+            const off = document.getElementById('tv-off');
+            if (currentTv.on) {
+                content.classList.remove('hidden');
+                off.classList.add('hidden');
+                document.getElementById('tv-channel-text').textContent = `Canal ${currentTv.channel} • Globo`;
+                document.getElementById('tv-volume-text').textContent = `Volume: ${currentTv.volume}`;
+            } else {
+                content.classList.add('hidden');
+                off.classList.remove('hidden');
+            }
+        }
+        async function tvVolumeUp() {
+            if (!currentTv.on) return;
+            const res = await apiCall('/tv/volume', 'POST', { action: 'up' });
+            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
+        }
+        async function tvVolumeDown() {
+            if (!currentTv.on) return;
+            const res = await apiCall('/tv/volume', 'POST', { action: 'down' });
+            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
+        }
+        async function tvMute() {
+            if (!currentTv.on) return;
+            const res = await apiCall('/tv/mute');
+            if (res) { currentTv.volume = res.state.volume; updateTVScreen(); }
+        }
+        async function tvChannelUp() {
+            if (!currentTv.on) return;
+            const res = await apiCall('/tv/channel', 'POST', { action: 'up' });
+            if (res) { currentTv.channel = res.state.channel; updateTVScreen(); }
+        }
+        async function tvChannelDown() {
+            if (!currentTv.on) return;
+            const res = await apiCall('/tv/channel', 'POST', { action: 'down' });
+            if (res) { currentTv.channel = res.state.channel; updateTVScreen(); }
+        }
+        async function tvInput() {
+            if (!currentTv.on) return;
+            await apiCall('/tv/input');
+        }
+
+        // ====================== CONTROLES AR CONDICIONADO ======================
+        async function acPower() {
+            const res = await apiCall('/ac/power');
+            if (res) {
+                currentAc.on = res.state.on;
+                updateACDisplay();
+            }
+        }
+        async function acTempUp() {
+            if (!currentAc.on) return;
+            const res = await apiCall('/ac/temp', 'POST', { action: 'up' });
+            if (res) { currentAc.temp = res.state.temp; updateACDisplay(); }
+        }
+        async function acTempDown() {
+            if (!currentAc.on) return;
+            const res = await apiCall('/ac/temp', 'POST', { action: 'down' });
+            if (res) { currentAc.temp = res.state.temp; updateACDisplay(); }
+        }
+        function updateACDisplay() {
+            document.getElementById('ac-temp').textContent = `${currentAc.temp}°`;
+            const modeNames = ['Frio', 'Quente', 'Ventilar', 'Secar', 'Auto'];
+            document.getElementById('ac-mode-name').innerHTML = `${modeNames[currentAc.mode]} • ${currentAc.on ? 'Ligado' : 'Desligado'}`;
+            document.getElementById('ac-power-btn').textContent = currentAc.on ? '⏻ Desligar' : '⏻ Ligar';
+            document.getElementById('ac-power-btn').classList.toggle('bg-emerald-500', currentAc.on);
+            document.getElementById('ac-power-btn').classList.toggle('bg-stone-300', !currentAc.on);
+            // highlight modo
+            for (let i = 0; i < 5; i++) {
+                const el = document.getElementById(`mode-${i}`);
+                if (i === currentAc.mode) {
+                    el.classList.add('bg-sky-100', 'text-sky-700');
+                    el.classList.remove('bg-stone-100', 'hover:bg-stone-200');
+                } else {
+                    el.classList.remove('bg-sky-100', 'text-sky-700');
+                    el.classList.add('bg-stone-100', 'hover:bg-stone-200');
+                }
+            }
+        }
+        async function acSetMode(modeIndex) {
+            if (!currentAc.on) return;
+            const res = await apiCall('/ac/mode', 'POST', { mode: modeIndex });
+            if (res) { currentAc.mode = res.state.mode; updateACDisplay(); }
+        }
+        async function acFanSpeed() {
+            if (!currentAc.on) return;
+            const res = await apiCall('/ac/fan');
+            if (res) { currentAc.fan = res.state.fan; document.getElementById('fan-speed-text').textContent = ['Baixo','Médio','Alto'][currentAc.fan-1]; }
+        }
+
+        // ====================== CONTROLES GARAGEM ======================
+        async function toggleGarage() {
+            const res = await apiCall('/garage/toggle');
+            if (res) {
+                currentGarage.open = res.state.open;
+                updateGarageDisplay();
+            }
+        }
+        function updateGarageDisplay() {
+            const statusEl = document.getElementById('garage-status');
+            const doorEl = document.getElementById('garage-door');
+            const openBtn = document.getElementById('garage-open-btn');
+            const closeBtn = document.getElementById('garage-close-btn');
+            if (currentGarage.open) {
+                statusEl.textContent = 'Aberta';
+                statusEl.className = 'mt-6 text-2xl font-semibold text-emerald-600';
+                doorEl.style.height = '80px';
+                doorEl.style.transform = 'translateY(60px)';
+                openBtn.classList.add('hidden');
+                closeBtn.classList.remove('hidden');
+                document.getElementById('garage-status-main').innerHTML = `<span class="text-emerald-500">Aberta</span>`;
+            } else {
+                statusEl.textContent = 'Fechada';
+                statusEl.className = 'mt-6 text-2xl font-semibold text-amber-600';
+                doorEl.style.height = '160px';
+                doorEl.style.transform = 'translateY(0)';
+                openBtn.classList.remove('hidden');
+                closeBtn.classList.add('hidden');
+                document.getElementById('garage-status-main').innerHTML = `Fechada`;
+            }
+        }
+        async function stopGarage() {
+            await apiCall('/garage/stop');
+        }
+
+        // ====================== MOBILE MENU ======================
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobile-menu');
+            const hamburger = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                hamburger.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+                hamburger.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        };
+
+        function logout() {
+            showToast('Sessão encerrada (demo)');
+            // Aqui você pode redirecionar ou limpar sessão real
+        }
+
+        // ====================== INICIALIZAÇÃO ======================
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('%c✅ SmartControl Flask conectado! Backend rodando em /api', 'color:#64748b; font-size:13px; font-weight:600');
+            
+            // ESC fecha modais e menu
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const modals = document.querySelectorAll('.fixed.inset-0');
+                    modals.forEach(m => {
+                        if (!m.classList.contains('hidden')) {
+                            const id = m.id;
+                            if (id.includes('tv')) closeModal('tv');
+                            if (id.includes('ac')) closeModal('ac');
+                            if (id.includes('garage')) closeModal('garage');
+                        }
+                    });
+                    const menu = document.getElementById('mobile-menu');
+                    if (!menu.classList.contains('hidden')) toggleMobileMenu();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

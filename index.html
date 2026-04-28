@@ -1,407 +1,376 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AG • Gerencie sua casa remotamente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-        
-        :root {
-            --tw-color-primary: #64748b;
-        }
-        
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
-        }
-        
-        .modal {
-            animation: modalPop 0.3s ease-out;
-        }
-        
-        @keyframes modalPop {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        
-        .remote-button {
-            transition: all 0.2s ease;
-        }
-        
-        .remote-button:active {
-            transform: scale(0.95);
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NewEnergy | Monitor Pro Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --brand-primary: #1a365d;
+      --brand-accent: #007aff;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --on: #10b981;
+      --off: #e11d48;
+      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    }
 
-        .nav-link {
-            transition: all 0.2s ease;
-        }
-        
-        .mobile-menu {
-            animation: slideDown 0.3s ease forwards;
-        }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .device-svg {
-            width: 100%;
-            max-width: 240px;
-            height: auto;
-        }
-        
-        @media (min-width: 640px) {
-            .device-svg {
-                max-width: 280px;
-            }
-        }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      background-image: radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.03) 0, transparent 50%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-        .toast {
-            animation: toastIn 0.3s ease forwards;
-        }
-    </style>
+    /* CONTAINER PRINCIPAL */
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* LOGIN & DASHBOARD TOGGLE */
+    #loginSection { display: block; }
+    #dashboardSection { display: none; }
+
+    /* CABEÇALHO */
+    .header { text-align: center; margin-bottom: 30px; }
+    .logo-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--brand-accent); font-weight: 800; margin-bottom: 5px; }
+    h1 { font-size: 24px; color: var(--brand-primary); margin: 0; cursor: pointer; }
+
+    /* GAUGES */
+    .gauges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+    .gauge-box { background: #fcfdfe; border: 1px solid #f1f5f9; border-radius: 16px; padding: 15px; text-align: center; }
+    .gauge-box canvas { width: 100% !important; height: auto !important; }
+    .g-title { font-size: 10px; text-transform: uppercase; color: var(--text-light); font-weight: 700; }
+    .g-value { font-size: 20px; font-weight: 800; color: var(--brand-primary); }
+
+    /* CLIENT INFO */
+    .client-info { background: #f8fafc; border-left: 4px solid var(--brand-accent); padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 12px; text-align: left; }
+
+    /* BOTÕES */
+    .btn-main { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+    .btn-primary { background: var(--brand-primary); color: white; margin-bottom: 10px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--brand-accent); color: var(--brand-accent); margin-bottom: 10px; }
+    .btn-led.active { background: var(--on); color: white; }
+
+    /* OVERLAYS (AC & ADMIN) */
+    .overlay-panel { 
+        display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        background: white; z-index: 100; padding: 30px; box-sizing: border-box; 
+        flex-direction: column; overflow-y: auto; 
+    }
+
+    /* TABS ADMIN */
+    .admin-tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; border: none; padding: 8px; font-size: 9px; font-weight: 800; border-radius: 6px; cursor: pointer; background: transparent; color: var(--text-light); }
+    .tab-btn.active { background: white; color: var(--brand-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+    .input-group { margin-bottom: 15px; text-align: left; }
+    label { font-size: 11px; font-weight: 700; color: var(--text-light); display: block; margin-bottom: 5px; }
+    input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+
+    /* GRID DE CONTROLE IR */
+    .ir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-ir { padding: 10px; font-size: 10px; font-weight: 700; border-radius: 6px; border: 1px solid #e2e8f0; cursor: pointer; background: white; }
+    .btn-ir:hover { background: #f8fafc; border-color: var(--brand-accent); }
+
+    #error { color: var(--error); background: #fff1f2; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; display: none; text-align: center; }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
 </head>
-<body class="bg-stone-100 text-stone-800">
-    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-x-3">
-                    <div class="w-9 h-9 bg-slate-700 rounded-2xl flex items-center justify-center text-white text-2xl font-semibold">AG</div>
-                    <h1 class="text-2xl font-semibold tracking-tight">AS e JG</h1>
-                </div>
+<body>
 
-                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
-                    <a href="#" onclick="document.getElementById('devices-section').scrollIntoView({ behavior: 'smooth' })" class="nav-link hover:text-slate-600 transition">Dispositivos</a>
-                    <a href="#" class="nav-link hover:text-slate-600 transition">Histórico</a>
-                    <a href="#" class="nav-link hover:text-slate-600 transition">Configurações</a>
-                    <div class="flex items-center gap-x-2 bg-stone-100 text-stone-700 px-4 h-9 rounded-3xl text-sm font-medium">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        Sistema Ativo
-                    </div>
-                    <button onclick="logout()" class="bg-slate-700 text-white px-6 h-9 rounded-3xl text-sm font-medium hover:bg-slate-800 transition">Sair</button>
-                </div>
-
-                <div class="flex md:hidden items-center gap-x-4">
-                    <div class="flex items-center gap-x-2 bg-stone-100 text-stone-700 px-3 h-8 rounded-3xl text-xs font-medium">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        Online
-                    </div>
-                    <button onclick="toggleMobileMenu()" id="hamburger-btn" class="w-10 h-10 flex items-center justify-center text-slate-700">
-                        <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12" /></svg>
-                    </button>
-                </div>
-            </div>
-
-            <div id="mobile-menu" class="hidden mobile-menu md:hidden mt-4 pt-4 border-t border-stone-200">
-                <div class="flex flex-col gap-y-4 text-sm font-medium">
-                    <a href="#" onclick="document.getElementById('devices-section').scrollIntoView({ behavior: 'smooth' }); toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Dispositivos</a>
-                    <a href="#" onclick="toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Histórico</a>
-                    <a href="#" onclick="toggleMobileMenu()" class="nav-link py-2 px-4 hover:bg-stone-100 rounded-2xl">Configurações</a>
-                    <button onclick="logout(); toggleMobileMenu()" class="mt-2 bg-slate-700 text-white py-3 rounded-3xl text-sm font-medium">Sair</button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-12">
-        <div class="text-center mb-12 sm:mb-16">
-            <div class="inline-flex items-center gap-x-2 bg-white border border-stone-200 rounded-3xl px-5 py-2 text-sm mb-6 shadow-sm">
-                <span class="text-emerald-500">●</span>
-                Conectado • Modo GitHub Web
-            </div>
-            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tighter leading-tight mb-4">
-                Gerencie sua casa<br>com um clique
-            </h1>
-            <p class="text-lg sm:text-xl text-stone-500 max-w-md mx-auto px-2">
-                Controle seus dispositivos remotamente com persistência de dados local.
-            </p>
-        </div>
-
-        <div id="devices-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div onclick="openDevice('tv')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
-                <div class="aspect-[16/11] bg-gradient-to-br from-slate-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
-                        <rect x="30" y="25" width="340" height="190" rx="15" ry="15" fill="#f1f5f9" stroke="#334155" stroke-width="25"/>
-                        <rect x="30" y="215" width="340" height="18" fill="#334155"/>
-                        <rect x="165" y="233" width="70" height="12" rx="2" fill="#334155"/>
-                        <rect x="55" y="45" width="290" height="150" rx="8" ry="8" fill="#0f172a"/>
-                        <text x="200" y="120" text-anchor="middle" fill="#e2e8f0" font-size="28" font-weight="600">TV</text>
-                    </svg>
-                </div>
-                <div class="px-6 py-6 sm:px-8 sm:py-7">
-                    <div class="flex justify-between items-baseline">
-                        <h2 class="text-2xl font-semibold">Televisão</h2>
-                        <span id="tv-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1">● Online</span>
-                    </div>
-                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Samsung QLED • Sala de estar</p>
-                </div>
-            </div>
-
-            <div onclick="openDevice('ac')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
-                <div class="aspect-[16/11] bg-gradient-to-br from-sky-100 to-slate-100 flex items-center justify-center p-6 sm:p-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
-                        <rect x="45" y="65" width="310" height="130" rx="12" ry="12" fill="#e0f2fe" stroke="#334155" stroke-width="22"/>
-                        <g opacity="0.8">
-                            <rect x="75" y="85" width="250" height="18" fill="#64748b" rx="2"/>
-                            <rect x="75" y="115" width="250" height="18" fill="#64748b" rx="2"/>
-                            <rect x="75" y="145" width="250" height="18" fill="#64748b" rx="2"/>
-                        </g>
-                        <text x="200" y="125" text-anchor="middle" fill="#334155" font-size="38" font-weight="700">AC</text>
-                        <rect x="130" y="195" width="140" height="25" rx="4" fill="#334155"/>
-                    </svg>
-                </div>
-                <div class="px-6 py-6 sm:px-8 sm:py-7">
-                    <div class="flex justify-between items-baseline">
-                        <h2 class="text-2xl font-semibold">Ar Condicionado</h2>
-                        <span id="ac-status-main" class="text-emerald-500 text-sm font-medium flex items-center gap-x-1">24°C</span>
-                    </div>
-                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Split 18000 BTU • Quarto</p>
-                </div>
-            </div>
-
-            <div onclick="openDevice('garage')" class="card-hover bg-white rounded-3xl overflow-hidden border border-stone-100 cursor-pointer">
-                <div class="aspect-[16/11] bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center p-6 sm:p-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="device-svg text-slate-700" fill="none" viewBox="0 0 400 250">
-                        <rect x="40" y="80" width="320" height="140" fill="#f1f5f9" stroke="#334155" stroke-width="22" rx="8"/>
-                        <rect x="85" y="95" width="120" height="110" fill="#e2e8f0" stroke="#334155" stroke-width="12"/>
-                        <line x1="85" y1="125" x2="205" y2="125" stroke="#64748b" stroke-width="8"/>
-                        <line x1="85" y1="155" x2="205" y2="155" stroke="#64748b" stroke-width="8"/>
-                        <polygon points="40,80 200,25 360,80" fill="#334155"/>
-                        <circle cx="270" cy="110" r="18" fill="#eab308"/>
-                    </svg>
-                </div>
-                <div class="px-6 py-6 sm:px-8 sm:py-7">
-                    <div class="flex justify-between items-baseline">
-                        <h2 class="text-2xl font-semibold">Garagem</h2>
-                        <span id="garage-status-main" class="text-amber-500 text-sm font-medium">Fechada</span>
-                    </div>
-                    <p class="text-stone-500 mt-1 text-sm sm:text-base">Portão automático • Casa</p>
-                </div>
-            </div>
-        </div>
+  <div class="card">
+    
+    <!-- SEÇÃO: LOGIN -->
+    <div id="loginSection">
+      <div class="header">
+        <div class="logo-badge">Industrial Intelligence</div>
+        <h1>NewEnergy</h1>
+        <p>Acesse o portal de monitoramento</p>
+      </div>
+      <div id="error"></div>
+      <div class="input-group">
+        <label>E-mail Corporativo</label>
+        <input type="email" id="email" placeholder="exemplo@empresa.com.br">
+      </div>
+      <div class="input-group">
+        <label>Senha de Acesso</label>
+        <input type="password" id="password" placeholder="Digite sua senha">
+      </div>
+      <button id="btnLogin" class="btn-main btn-primary">Entrar no Sistema</button>
     </div>
 
-    <div onclick="if(event.target.id === 'tv-modal') closeModal('tv')" id="tv-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
-            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-semibold">Controle da Televisão</h2>
-                    <p class="text-stone-500 text-sm">Samsung QLED • Sala</p>
-                </div>
-                <button onclick="closeModal('tv')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
-            </div>
-            <div id="tv-screen" class="mx-6 mt-6 bg-slate-900 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
-                <div id="tv-content" class="text-white text-center w-full">
-                    <div class="text-6xl mb-2">📺</div>
-                    <p id="tv-channel-text" class="text-3xl font-medium">Canal 7 • Globo</p>
-                    <p id="tv-volume-text" class="text-sm mt-1 opacity-70">Volume: 28</p>
-                </div>
-                <div id="tv-off" class="hidden absolute inset-0 bg-slate-950 flex items-center justify-center text-white/30 text-8xl">⏻</div>
-            </div>
-            <div class="p-6 grid grid-cols-4 gap-3 text-center">
-                <button onclick="tvPower()" class="remote-button col-span-4 bg-red-500 hover:bg-red-600 text-white h-14 rounded-3xl text-xl flex items-center justify-center gap-x-2 font-medium">⏻ Ligar / Desligar</button>
-                <button onclick="tvVolumeDown()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔉</button>
-                <button onclick="tvMute()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔇</button>
-                <button onclick="tvVolumeUp()" class="remote-button bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-2xl">🔊</button>
-                <button onclick="tvChannelDown()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">⬅️ Canal -</button>
-                <button onclick="tvChannelUp()" class="remote-button col-span-2 bg-stone-100 hover:bg-stone-200 h-12 rounded-3xl text-lg">Canal + ➡️</button>
-            </div>
+    <!-- SEÇÃO: DASHBOARD -->
+    <div id="dashboardSection">
+      <div class="header">
+        <div class="logo-badge">Status do Sistema</div>
+        <h1 id="logoAdmin">NewEnergy</h1>
+        <div style="font-size: 11px; color: var(--on); font-weight: 700; margin-top: 5px;">● ONLINE</div>
+      </div>
+
+      <div class="client-info">
+        <div>CLIENTE: <strong id="dispCliente">--</strong></div>
+        <div>LOCAL: <strong id="dispLocal">--</strong></div>
+      </div>
+
+      <div class="gauges-grid">
+        <div class="gauge-box">
+          <div class="g-title">Temperatura</div>
+          <canvas id="gTemp"></canvas>
+          <div id="tempVal" class="g-value">--°C</div>
         </div>
-    </div>
-
-    <div onclick="if(event.target.id === 'ac-modal') closeModal('ac')" id="ac-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
-            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-semibold">Ar Condicionado</h2>
-                    <p class="text-stone-500 text-sm">Split 18000 BTU • Quarto</p>
-                </div>
-                <button onclick="closeModal('ac')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
-            </div>
-            <div class="px-6 py-8">
-                <div class="flex justify-center items-baseline gap-x-6 mb-8">
-                    <button onclick="acTempDown()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">–</button>
-                    <div class="text-center">
-                        <div id="ac-temp" class="text-7xl font-semibold text-slate-700">24°</div>
-                        <div id="ac-mode-name" class="text-stone-400 text-sm font-medium">Frio • Ativo</div>
-                    </div>
-                    <button onclick="acTempUp()" class="remote-button text-5xl w-12 h-12 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-3xl">+</button>
-                </div>
-                <div class="grid grid-cols-5 gap-2 mb-8">
-                    <button onclick="acSetMode(0)" id="mode-0" class="remote-button text-xs py-4 rounded-3xl bg-sky-100 text-sky-700">❄️</button>
-                    <button onclick="acSetMode(1)" id="mode-1" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">🔥</button>
-                    <button onclick="acSetMode(2)" id="mode-2" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">🌬️</button>
-                    <button onclick="acSetMode(3)" id="mode-3" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">💧</button>
-                    <button onclick="acSetMode(4)" id="mode-4" class="remote-button text-xs py-4 rounded-3xl bg-stone-100">♻️</button>
-                </div>
-                <button onclick="acPower()" id="ac-power-btn" class="w-full h-14 rounded-3xl text-lg font-medium bg-emerald-500 text-white">⏻ Ligar/Desligar</button>
-            </div>
+        <div class="gauge-box">
+          <div class="g-title">Umidade</div>
+          <canvas id="gHum"></canvas>
+          <div id="humVal" class="g-value">--%</div>
         </div>
+      </div>
+
+      <button id="btnLED" class="btn-main btn-outline">Ligar Iluminação</button>
+      <button onclick="openPanel('acPanel')" class="btn-main btn-primary">Controle Climatização/TV</button>
+      <button onclick="logout()" class="btn-main" style="background:#f1f5f9; color: var(--text-light); font-size: 11px;">Sair</button>
     </div>
 
-    <div onclick="if(event.target.id === 'garage-modal') closeModal('garage')" id="garage-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-        <div class="modal bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
-            <div class="px-6 pt-6 pb-4 border-b flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-semibold">Garagem</h2>
-                    <p class="text-stone-500 text-sm">Portão automático</p>
-                </div>
-                <button onclick="closeModal('garage')" class="text-4xl text-stone-300 hover:text-stone-400 leading-none">×</button>
-            </div>
-            <div class="p-6">
-                <div id="garage-door-visual" class="w-full max-w-72 h-48 bg-stone-100 border-8 border-slate-700 rounded-3xl flex items-center justify-center relative overflow-hidden mx-auto">
-                    <div id="garage-door" class="w-56 bg-amber-300 h-40 rounded-2xl transition-all duration-700 flex items-center justify-center text-6xl">🚗</div>
-                </div>
-                <div id="garage-status" class="mt-6 text-center text-2xl font-semibold text-amber-600">Fechada</div>
-                <button onclick="toggleGarage()" id="garage-action-btn" class="mt-8 w-full h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl">ABRIR</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-3xl shadow-2xl z-[200]">
-        <span id="toast-text"></span>
-    </div>
-
-    <footer class="bg-white border-t border-stone-200 py-8 text-center text-sm text-stone-400">
-        ✅ Sincronizado localmente • AG Home Control
-    </footer>
-
-    <script>
-        // ====================== PERSISTÊNCIA (Substitui o Flask) ======================
-        const STORAGE_KEY = 'home_automation_state';
+    <!-- PAINEL: AR / TV -->
+    <div id="acPanel" class="overlay-panel">
+        <div class="logo-badge">Controle Remoto</div>
+        <h2 style="font-size: 18px; color: var(--brand-primary);">Climatização & Multimídia</h2>
         
-        const defaultState = {
-            tv: { on: true, volume: 28, channel: 7 },
-            ac: { on: true, temp: 24, mode: 0 },
-            garage: { open: false }
+        <div style="background:#0f172a; color:white; padding:20px; border-radius:15px; margin: 15px 0; display:flex; justify-content:space-around;">
+            <div style="text-align:center;"><span style="font-size:9px; color:#64748b;">REAL</span><div id="acReal" style="font-size:24px; font-weight:800;">--°</div></div>
+            <div style="text-align:center; color:var(--brand-accent);"><span style="font-size:9px; color:#64748b;">SETPOINT</span><div id="acAlvo" style="font-size:24px; font-weight:800;">22°</div></div>
+        </div>
+
+        <label>Controles do Ar</label>
+        <div class="ir-grid" style="margin-bottom:20px;">
+            <button class="btn-ir" onclick="sendIR('ac_on')" style="color:var(--on)">AC ON</button>
+            <button class="btn-ir" onclick="sendIR('ac_off')" style="color:var(--off)">AC OFF</button>
+            <button class="btn-ir" onclick="adjustSetpoint(1)">TEMP +</button>
+            <button class="btn-ir" onclick="adjustSetpoint(-1)">TEMP -</button>
+        </div>
+
+        <label>Controles da TV</label>
+        <div class="ir-grid">
+            <button class="btn-ir" onclick="sendIR('tv_power')">TV POWER</button>
+            <button class="btn-ir" onclick="sendIR('tv_input')">INPUT</button>
+            <button class="btn-ir" onclick="sendIR('tv_vol_up')">VOL +</button>
+            <button class="btn-ir" onclick="sendIR('tv_vol_down')">VOL -</button>
+        </div>
+
+        <button onclick="toggleAuto()" id="btnAuto" class="btn-main" style="margin-top:15px; background:var(--brand-accent); color:white;">Ativar Automático</button>
+        <button onclick="closePanel('acPanel')" class="btn-main" style="margin-top:10px; background:none; color:var(--text-light);">Voltar</button>
+    </div>
+
+    <!-- PAINEL: ENGENHARIA (ADMIN) -->
+    <div id="adminPanel" class="overlay-panel">
+        <div class="logo-badge">Service Engineering</div>
+        <h2 style="font-size: 16px; margin-bottom:20px;">Configurações Avançadas</h2>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('tabSist', this)">SISTEMA</button>
+            <button class="tab-btn" onclick="switchTab('tabIR_AC', this)">IR AR</button>
+            <button class="tab-btn" onclick="switchTab('tabIR_TV', this)">IR TV</button>
+        </div>
+
+        <div id="tabSist" class="tab-content">
+            <div class="input-group"><label>Cliente</label><input type="text" id="cfgCliente"></div>
+            <div class="input-group"><label>Localização</label><input type="text" id="cfgLocal"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="input-group"><label>T. Máx</label><input type="number" id="tMax"></div>
+                <div class="input-group"><label>H. Máx</label><input type="number" id="hMax"></div>
+            </div>
+        </div>
+
+        <div id="tabIR_AC" class="tab-content" style="display:none;">
+            <div class="ir-grid">
+                <button class="btn-ir" onclick="startLearn('ac_on')">LEARN AC ON</button>
+                <button class="btn-ir" onclick="startLearn('ac_off')">LEARN AC OFF</button>
+                <button class="btn-ir" onclick="startLearn('ac_up')">LEARN AC +</button>
+                <button class="btn-ir" onclick="startLearn('ac_down')">LEARN AC -</button>
+            </div>
+        </div>
+
+        <div id="tabIR_TV" class="tab-content" style="display:none;">
+            <div class="ir-grid">
+                <button class="btn-ir" onclick="startLearn('tv_power')">LEARN TV PWR</button>
+                <button class="btn-ir" onclick="startLearn('tv_vol_up')">LEARN VOL +</button>
+                <button class="btn-ir" onclick="startLearn('tv_vol_down')">LEARN VOL -</button>
+                <button class="btn-ir" onclick="startLearn('tv_input')">LEARN INPUT</button>
+            </div>
+        </div>
+
+        <div style="margin-top:auto; padding-top:20px; display:flex; gap:10px;">
+            <button onclick="saveConfig()" class="btn-main btn-primary" style="flex:2">Salvar</button>
+            <button onclick="closePanel('adminPanel')" class="btn-main" style="flex:1; border:1px solid #e2e8f0; font-size:10px;">Sair</button>
+        </div>
+    </div>
+
+  </div>
+
+  <script>
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLnGnSEpqacBtseenPaS8CxHtZW0iD96I",
+      authDomain: "controle-led-esp-oficial.firebaseapp.com",
+      databaseURL: "https://controle-led-esp-oficial-default-rtdb.firebaseio.com",
+      projectId: "controle-led-esp-oficial",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // VARIÁVEIS DE ESTADO
+    let gT, gH;
+    let config = { setpoint: 22, acAuto: false };
+    let clickLogo = 0;
+
+    // GAUGES INIT
+    function initGauges() {
+      const opt = (col) => ({ angle: 0.15, lineWidth: 0.2, radiusScale: 0.9, pointer: { length: 0.5, strokeWidth: 0.03, color: '#1a365d' }, colorStart: col, colorStop: col, strokeColor: '#e2e8f0', generateGradient: true, highDpiSupport: true });
+      gT = new Gauge(document.getElementById("gTemp")).setOptions(opt('#e11d48'));
+      gT.maxValue = 50; gT.setMinValue(0); gT.set(0);
+      gH = new Gauge(document.getElementById("gHum")).setOptions(opt('#007aff'));
+      gH.maxValue = 100; gH.setMinValue(0); gH.set(0);
+    }
+
+    // AUTH LOGIC
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("dashboardSection").style.display = "block";
+        initGauges();
+        startRealtimeUpdates();
+      } else {
+        document.getElementById("loginSection").style.display = "block";
+        document.getElementById("dashboardSection").style.display = "none";
+      }
+    });
+
+    document.getElementById("btnLogin").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+      if(!email || !pass) return showError("Preencha todos os campos.");
+      
+      auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Acesso negado."));
+    });
+
+    // REALTIME DATABASE
+    function startRealtimeUpdates() {
+      db.ref("/config_alertas").on("value", s => {
+        const val = s.val() || {};
+        config = { ...config, ...val };
+        document.getElementById("dispCliente").innerText = config.cliente || "NewEnergy Client";
+        document.getElementById("dispLocal").innerText = config.local || "Site Alpha";
+        document.getElementById("acAlvo").innerText = (config.setpoint || 22) + "°";
+        document.getElementById("btnAuto").innerText = config.acAuto ? "DESATIVAR AUTO" : "ATIVAR AUTOMÁTICO";
+        document.getElementById("btnAuto").style.background = config.acAuto ? "#10b981" : "#007aff";
+        
+        // Popula Admin
+        document.getElementById("cfgCliente").value = config.cliente || "";
+        document.getElementById("cfgLocal").value = config.local || "";
+        document.getElementById("tMax").value = config.tMax || 30;
+        document.getElementById("hMax").value = config.hMax || 80;
+      });
+
+      db.ref("/temp").on("value", s => {
+        const v = parseFloat(s.val()) || 0;
+        gT.set(v);
+        document.getElementById("tempVal").innerText = v.toFixed(1) + "°C";
+        document.getElementById("acReal").innerText = v.toFixed(0) + "°";
+        if(config.acAuto && v > config.setpoint) sendIR('ac_on');
+      });
+
+      db.ref("/hum").on("value", s => {
+        const v = parseFloat(s.val()) || 0;
+        gH.set(v);
+        document.getElementById("humVal").innerText = v.toFixed(0) + "%";
+      });
+
+      db.ref("/led").on("value", s => {
+        const btn = document.getElementById("btnLED");
+        const isOn = s.val() == 1;
+        btn.innerText = isOn ? "LUZ LIGADA" : "LIGAR ILUMINAÇÃO";
+        btn.className = isOn ? "btn-main btn-led active" : "btn-main btn-outline";
+      });
+    }
+
+    // ACTIONS
+    function sendIR(cmd) { db.ref("/ir_system/execute").set({ command: cmd, ts: Date.now() }); }
+    function startLearn(f) { 
+        db.ref("/ir_system/learn").set({ active: true, function: f, ts: Date.now() });
+        alert("ESP32 em modo de captura para: " + f);
+    }
+    
+    function adjustSetpoint(v) {
+        const novo = (config.setpoint || 22) + v;
+        db.ref("/config_alertas/setpoint").set(novo);
+        sendIR(v > 0 ? 'ac_up' : 'ac_down');
+    }
+
+    function toggleAuto() { db.ref("/config_alertas/acAuto").set(!config.acAuto); }
+    
+    document.getElementById("btnLED").onclick = () => {
+        const isOff = document.getElementById("btnLED").innerText.includes("LIGAR");
+        db.ref("/led").set(isOff ? 1 : 0);
+    };
+
+    function saveConfig() {
+        const data = {
+            cliente: document.getElementById("cfgCliente").value,
+            local: document.getElementById("cfgLocal").value,
+            tMax: parseFloat(document.getElementById("tMax").value),
+            hMax: parseFloat(document.getElementById("hMax").value)
         };
-
-        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState;
-
-        function save() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            updateMainDisplay();
-        }
-
-        // ====================== CORE FUNCTIONS ======================
-        function showToast(text) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-text').textContent = text;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 2500);
-        }
-
-        function updateMainDisplay() {
-            document.getElementById('tv-status-main').textContent = state.tv.on ? '● Online' : '○ Offline';
-            document.getElementById('ac-status-main').textContent = state.ac.on ? `${state.ac.temp}°C` : 'Desligado';
-            const garageStatus = document.getElementById('garage-status-main');
-            garageStatus.textContent = state.garage.open ? 'Aberta' : 'Fechada';
-            garageStatus.className = state.garage.open ? 'text-emerald-500 text-sm font-medium' : 'text-amber-500 text-sm font-medium';
-        }
-
-        // ====================== TV CONTROLS ======================
-        function updateTVScreen() {
-            const content = document.getElementById('tv-content');
-            const off = document.getElementById('tv-off');
-            if (state.tv.on) {
-                content.classList.remove('hidden'); off.classList.add('hidden');
-                document.getElementById('tv-channel-text').textContent = `Canal ${state.tv.channel} • Globo`;
-                document.getElementById('tv-volume-text').textContent = `Volume: ${state.tv.volume}`;
-            } else {
-                content.classList.add('hidden'); off.classList.remove('hidden');
-            }
-        }
-
-        function tvPower() { state.tv.on = !state.tv.on; updateTVScreen(); save(); showToast('Energia TV alterada'); }
-        function tvVolumeUp() { if(state.tv.on) { state.tv.volume++; updateTVScreen(); save(); } }
-        function tvVolumeDown() { if(state.tv.on && state.tv.volume > 0) { state.tv.volume--; updateTVScreen(); save(); } }
-        function tvMute() { if(state.tv.on) { state.tv.volume = 0; updateTVScreen(); save(); } }
-        function tvChannelUp() { if(state.tv.on) { state.tv.channel++; updateTVScreen(); save(); } }
-        function tvChannelDown() { if(state.tv.on && state.tv.channel > 1) { state.tv.channel--; updateTVScreen(); save(); } }
-
-        // ====================== AC CONTROLS ======================
-        function updateACDisplay() {
-            document.getElementById('ac-temp').textContent = `${state.ac.temp}°`;
-            const modes = ['Frio', 'Quente', 'Ventilar', 'Secar', 'Auto'];
-            document.getElementById('ac-mode-name').textContent = `${modes[state.ac.mode]} • ${state.ac.on ? 'Ativo' : 'Inativo'}`;
-            const btn = document.getElementById('ac-power-btn');
-            btn.className = `w-full h-14 rounded-3xl text-lg font-medium transition ${state.ac.on ? 'bg-emerald-500 text-white' : 'bg-stone-300 text-stone-600'}`;
-            
-            for(let i=0; i<5; i++) {
-                const el = document.getElementById(`mode-${i}`);
-                el.className = `remote-button text-xs py-4 rounded-3xl transition ${state.ac.mode === i ? 'bg-sky-100 text-sky-700 font-bold' : 'bg-stone-100'}`;
-            }
-        }
-
-        function acPower() { state.ac.on = !state.ac.on; updateACDisplay(); save(); }
-        function acTempUp() { if(state.ac.on && state.ac.temp < 30) { state.ac.temp++; updateACDisplay(); save(); } }
-        function acTempDown() { if(state.ac.on && state.ac.temp > 16) { state.ac.temp--; updateACDisplay(); save(); } }
-        function acSetMode(m) { if(state.ac.on) { state.ac.mode = m; updateACDisplay(); save(); } }
-
-        // ====================== GARAGE CONTROLS ======================
-        function updateGarageDisplay() {
-            const door = document.getElementById('garage-door');
-            const statusText = document.getElementById('garage-status');
-            const btn = document.getElementById('garage-action-btn');
-            
-            if (state.garage.open) {
-                door.style.height = '60px'; door.style.transform = 'translateY(50px)';
-                statusText.textContent = 'Aberta'; statusText.className = 'mt-6 text-center text-2xl font-semibold text-emerald-600';
-                btn.textContent = 'FECHAR'; btn.className = 'mt-8 w-full h-20 text-2xl font-semibold bg-red-500 text-white rounded-3xl transition';
-            } else {
-                door.style.height = '160px'; door.style.transform = 'translateY(0)';
-                statusText.textContent = 'Fechada'; statusText.className = 'mt-6 text-center text-2xl font-semibold text-amber-600';
-                btn.textContent = 'ABRIR'; btn.className = 'mt-8 w-full h-20 text-2xl font-semibold bg-emerald-500 text-white rounded-3xl transition';
-            }
-        }
-
-        function toggleGarage() { state.garage.open = !state.garage.open; updateGarageDisplay(); save(); showToast(state.garage.open ? 'Abrindo portão...' : 'Fechando portão...'); }
-
-        // ====================== MODAL LOGIC ======================
-        function openDevice(device) {
-            document.getElementById(`${device}-modal`).classList.remove('hidden');
-            if(device === 'tv') updateTVScreen();
-            if(device === 'ac') updateACDisplay();
-            if(device === 'garage') updateGarageDisplay();
-        }
-
-        function closeModal(device) {
-            document.getElementById(`${device}-modal`).classList.add('hidden');
-        }
-
-        window.toggleMobileMenu = function() {
-            const menu = document.getElementById('mobile-menu');
-            const hamburger = document.getElementById('hamburger-icon');
-            const closeIcon = document.getElementById('close-icon');
-            const isHidden = menu.classList.toggle('hidden');
-            hamburger.classList.toggle('hidden', !isHidden);
-            closeIcon.classList.toggle('hidden', isHidden);
-        };
-
-        function logout() { showToast('Sessão encerrada (Demo)'); }
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            updateMainDisplay();
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    ['tv', 'ac', 'garage'].forEach(closeModal);
-                    if (!document.getElementById('mobile-menu').classList.contains('hidden')) toggleMobileMenu();
-                }
-            });
+        db.ref("/config_alertas").update(data).then(() => {
+            alert("Configurações Salvas!");
+            closePanel('adminPanel');
         });
-    </script>
+    }
+
+    // UI CONTROLS
+    function openPanel(id) { document.getElementById(id).style.display = "flex"; }
+    function closePanel(id) { document.getElementById(id).style.display = "none"; }
+    
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        btn.classList.add('active');
+    }
+
+    function showError(msg) {
+      const err = document.getElementById("error");
+      err.textContent = msg;
+      err.style.display = "block";
+      setTimeout(() => err.style.display = "none", 3000);
+    }
+
+    document.getElementById("logoAdmin").onclick = () => {
+        if(++clickLogo >= 5) { openPanel('adminPanel'); clickLogo = 0; }
+    };
+
+    function logout() { auth.signOut(); }
+  </script>
 </body>
 </html>
